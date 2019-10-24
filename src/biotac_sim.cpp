@@ -8,7 +8,7 @@ BioTacSimulator::BioTacSimulator(ros::NodeHandle *nh, int id):
 nh_(*nh), id_(id), pdc_(0), status_(0), is_started_(false)
 {
     subscriber_ = nh_.subscribe("/simulation_status", 100, &BioTacSimulator::statusCallback, this);
-    publisher_ = nh_.advertise<biotac_simulator::Biotac>("/sim/tactile", 100);
+    publisher_ = nh_.advertise<biotac_simulator::BiotacAll>("/sim/tactile", 100);
     // set up the reference spline
     for (auto p : pdc_ref_) { p += pdc_;}
 //    pdc_spline_.set_points(t_ref_, pdc_ref_, false);
@@ -27,7 +27,7 @@ void BioTacSimulator::publish()
         if (!is_started_) {
             t0_ = ros::Time::now();
             is_started_ = true;
-            puts("BioTac has started.\n");
+            printf("Publishing on /sim/tactile/tactiles[%d]/pdc has started.\n", id_);
         } else {
             ros::Duration duration = ros::Time::now() - t0_;
             double dt = duration.toSec();
@@ -35,7 +35,8 @@ void BioTacSimulator::publish()
         }
     }
     biotac_.pdc = pdc_;
-    publisher_.publish(biotac_);
+    biotac_all_.tactiles[id_] = biotac_;
+    publisher_.publish(biotac_all_);
 }
 
 int main(int argc, char **argv)

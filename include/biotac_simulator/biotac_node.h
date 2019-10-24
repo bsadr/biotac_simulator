@@ -8,6 +8,7 @@
 #include "ros/ros.h" // ROS Library
 #include "std_msgs/Int16.h"
 #include "biotac_simulator/Biotac.h"
+#include "biotac_simulator/BiotacAll.h"
 #include "spline.h"
 
 class BioTacSimulator
@@ -19,6 +20,7 @@ private:
     int id_;
     int pdc_;
     biotac_simulator::Biotac biotac_;
+    biotac_simulator::BiotacAll biotac_all_;
     int status_;
     bool is_started_;
     ros::Time t0_;
